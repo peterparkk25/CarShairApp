@@ -3,6 +3,7 @@ import HomeScreen from "../Tabs/HomeScreen";
 import HostScreen from "../Tabs/Host";
 import RentScreen from "../Tabs/Rent";
 import UserScreen from "../Tabs/User";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 

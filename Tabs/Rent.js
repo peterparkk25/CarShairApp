@@ -6,133 +6,91 @@ import {
   Text,
   View,
   TextInput,
+  Picker,
 } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function RentScreen({ navigation }) {
-  //MOSH
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [search, setSearch] = useState("");
-  const [masterData, setmasterData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [items, setItems] = useState([]);
+  const [allMakeData, setAllMakeData] = useState([]);
+  const [makeData, setMakeData] = useState([]);
+  const [make, setMake] = useState(null);
+  const [allModelData, setAllModelData] = useState([]);
+  const [modelData, setModelData] = useState([]);
+
   useEffect(() => {
-    const apiURL =
-      "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/honda?format=json";
-    fetch(apiURL)
+    const allMakesURL =
+      "https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json";
+    fetch(allMakesURL)
       .then((response) => response.json())
       .then((json) => {
-        setData(json);
-        setmasterData(json);
+        setAllMakeData(json);
+        const makeDataArray = allMakeData.Results.map((make) => {
+          return { label: make.Make_Name, value: make.Make_Name };
+        });
+        setMakeData(makeDataArray);
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);
 
-  const searchFilter = (text) => {
-    if (text) {
-      const newData = masterData.filter((car) => {
-        const carData = car.Make_Name
-          ? car.Make_Name.toUpperCase()
-          : "".toUpperCase();
-        const textData = text.toUpperCase();
-        return carData.indexOf(textData) > -1;
-      });
-      setData(newData);
-      setSearch(text);
-    } else {
-      setData(masterData);
-      setSearch(text);
-    }
-  };
-  //NEW
-  // const [filteredData, setfilteredData] = useState([]);
-  // const [masterData, setmasterData] = useState([]);
+  useEffect(() => {
+    const allModelsURL = `https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${make}?format=json`;
+    fetch(allModelsURL)
+      .then((response) => response.json())
+      .then((json) => {
+        setAllModelData(json);
+        const modelDataArray = allModelData.Results.map((model) => {
+          return { label: model.Model_Name, value: model.Model_Name };
+        });
+        setModelData(modelDataArray);
+        console.log(modelData);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, [make]);
 
-  // useEffect(() => {
-  //   console.log(filteredData);
-  //   fetchCarData();
-  //   return () => {};
-  // }, []);
-
-  // const fetchCarData = () => {
-  //   const apiURL =
-  //     "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/honda?format=json";
-  //   fetch(apiURL)
-  //     .then((response) => response.json())
-  //     .then((responseJson) => {
-  //       setfilteredData(responseJson);
-  //       setmasterData(responseJson);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
+  useEffect(() => {
+    console.log(make);
+  }, [make]);
 
   return (
     <View style={{ flex: 1, padding: 24 }}>
       {isLoading ? (
         <Text>Loading...</Text>
       ) : (
-        <View>
-          <TextInput
-            style={styles.textInputStyle}
-            value={search}
-            placeholder="Search Here"
-            onChangeText={(text) => searchFilter()}
-          ></TextInput>
-          <Text style={{ fontSize: 18, color: "green", textAlign: "center" }}>
-            {data.Results.map((car) => {
-              return (
-                <Text>
-                  <Text>
-                    {car.Make_Name} {car.Model_Name}
-                  </Text>
-                </Text>
-              );
-            })}
-          </Text>
-        </View>
+        <DropDownPicker
+          open={open}
+          value={make}
+          items={makeData}
+          setOpen={setOpen}
+          setValue={setMake}
+          setItems={setMakeData}
+          searchable={true}
+        />
       )}
     </View>
   );
 }
-//   const ItemView = ({ item }) => {
-//     return (
-//       <Text style={styles.itemStyle}>
-//         {item.Results[0].Make_Model}
-//         {". "}
-//       </Text>
-//     );
-//   };
 
-//   const ItemSeparatorView = () => {
-//     return (
-//       <View
-//         style={{ height: 0.5, width: "100%", backgroundColor: "#c8c8c8" }}
-//       />
-//     );
-//   };
+const styles = StyleSheet.create({});
 
-//   return (
-//     <SafeAreaView style={{ flex: 1 }}>
-//       <View style={styles.container}>
-//         <FlatList
-//           data={filteredData}
-//           // keyExtractor={(item, index) => index.toString()}
-//           ItemSeparatorComponent={ItemSeparatorView}
-//           renderItem={ItemView}
-//         />
-//       </View>
-//     </SafeAreaView>
-//   );
-// }
-
-const styles = StyleSheet.create({
-  textInputStyle: {
-    height: 50,
-    borderWidth: 1,
-    paddingLeft: 20,
-    margin: 5,
-    borderColor: "#009688",
-    backgroundColor: "white",
-  },
-});
+{
+  /* {testing ? (
+            <Text>Please Choose Your Make Before You Move On</Text>
+          ) : (
+            <Text>
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={makeData}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setMakeData}
+                searchable={true}
+              />
+            </Text>
+          )} */
+}

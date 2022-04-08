@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
-export default function LoginScreen({ navigation }) {
+export default function SplashScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Login</Text>
+      <Text>Splash</Text>
     </View>
   );
 }

@@ -3,9 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   Button,
-  Image,
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
@@ -100,7 +98,12 @@ export default function BookScreen({ navigation }) {
               <Button
                 title="Search!"
                 color="black"
-                onPress={() => navigation.navigate("Results")}
+                onPress={() =>
+                  navigation.navigate("Results", {
+                    carMake: make,
+                    carModel: model,
+                  })
+                }
               />
             </TouchableOpacity>
           </View>

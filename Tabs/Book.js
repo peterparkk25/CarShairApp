@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
-  FlatList,
   StyleSheet,
   Text,
   View,
   TextInput,
-  Picker,
+  Button,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
@@ -57,41 +58,93 @@ export default function BookScreen({ navigation }) {
         <Text>Loading...</Text>
       ) : (
         <View>
-          <Text>Please Choose Your Desired Make</Text>
-          <DropDownPicker
-            open={openMakes}
-            value={make}
-            items={makeData}
-            setOpen={setOpenMakes}
-            setValue={setMake}
-            setItems={setMakeData}
-            searchable={true}
-            onChangeValue={() => {
-              getAllModels();
-            }}
-          />
-          <Text> </Text>
-          <Text> </Text>
-          <Text> </Text>
-          <Text> </Text>
-          <Text> </Text>
-          <Text> </Text>
-          <Text> </Text>
-          <Text> </Text>
-          <Text>Please Choose Your Desired Model</Text>
-          <DropDownPicker
-            open={openModels}
-            value={model}
-            items={modelData}
-            setOpen={setOpenModels}
-            setValue={setModel}
-            setItems={setModelData}
-            searchable={true}
-          />
+          <View style={styles.header}>
+            <ImageBackground
+              source={require("../assets/Porsche_GT3RS_Rear.png")}
+              style={styles.background}
+            >
+              <Text style={styles.headerText}>
+                Please choose the year, make, and model you'd like to search!
+              </Text>
+            </ImageBackground>
+          </View>
+          <View style={styles.body}>
+            <Text style={styles.label}>Please Choose Your Desired Make</Text>
+            <DropDownPicker
+              open={openMakes}
+              value={make}
+              items={makeData}
+              setOpen={setOpenMakes}
+              setValue={setMake}
+              setItems={setMakeData}
+              searchable={true}
+              maxHeight={150}
+              style={styles.dropDownPicker}
+              onChangeValue={() => {
+                getAllModels();
+              }}
+            />
+            <Text style={styles.label}>Please Choose Your Desired Model</Text>
+            <DropDownPicker
+              open={openModels}
+              value={model}
+              items={modelData}
+              setOpen={setOpenModels}
+              setValue={setModel}
+              setItems={setModelData}
+              searchable={true}
+              maxHeight={150}
+              style={styles.dropDownPicker}
+            />
+            <TouchableOpacity style={styles.searchButton}>
+              <Button
+                title="Search!"
+                color="black"
+                onPress={() => navigation.navigate("Results")}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  header: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerText: {
+    backgroundColor: "#63a832",
+    fontWeight: "bold",
+  },
+  background: {
+    width: "100%",
+    height: undefined,
+    aspectRatio: 2,
+  },
+  dropDownPicker: {
+    marginTop: 10,
+    marginBottom: 100,
+  },
+  label: {
+    fontWeight: "bold",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  body: {
+    alignItems: "center",
+    padding: 30,
+  },
+  searchButton: {
+    width: "60%",
+    borderRadius: 10,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#63a832",
+  },
+});

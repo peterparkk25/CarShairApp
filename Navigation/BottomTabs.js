@@ -17,7 +17,7 @@ export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        // tabBarShowLabel: false,
+        headerShown: false,
         style: {
           position: "relative",
           height: "8%",
